@@ -1,0 +1,2 @@
+class APDesligadoException(Exception):
+    pass

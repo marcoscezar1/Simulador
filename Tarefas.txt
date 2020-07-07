@@ -1,0 +1,33 @@
+Vou colocar aqui as tarefas do projeto que encontrei
+Acho que tirando a parte de otimização, falta pouco pra terminar
+
+Seguinte
+
+Refatorar o código pra tirar deixar só em pt e snake_case para os métodos
+Deixar os nomes mais uniformes para evitar erros
+as classes continuam PascalCase
+
+-Falta terminar o grafo. Entendi como o networkx funciona e vai ser rápido
+    Tenho que melhorar seus métodos e adc alguns que faltam (mas isso vou vendo enquanto o projeto vai rolando)
+
+-Colocar o código de simulação
+    Minha ideia é colocar logo o 'for' pra rolar a simulação e um if pra verificar de 5 em 5 min para gerar o log
+    Minha ideia é ter uma lista/dicionário com a qtd de elementos da duração da simulação
+    Cada elemento vai ser uma lista com todos os eventos que vão acontecer naquele momento
+    Acho que vou fazer o evento sendo uma tupla, onde o primeiro elemento é o nome
+    Na simulação eu mando vários ifs e verifico o que fazer
+    Gerar as funções também que farão cada coisa
+
+-Os eventos vão ser gerados no módulo principal
+-Os usários também vão ser preenchidos no módulo principal
+-O grafo também
+    Todos eles sendo lidos de arquivos csv
+    Serão passados por parâmetro para o objeto 'simulador'
+
+-Falta terminar a parte de machinelearning e ver como vai funcionar diretinho, mas já tenho uma ideia
+-Falta terminar o logger para gerar os logs (Parece fácil)
+
+Tenho que perguntar ao Diogo com vai funcionar os bagulhos dos cliques visto que não muda
+Tenho que ver com ao Diogo também a proposta de ligar quem tem mais vizinhos
+
+Parece que é isso.

@@ -4,8 +4,15 @@ class Usuario:
         self.tempo_de_chegada = tempo_de_chegada
         self.tempo_de_saida = tempo_de_saida
         self.node_associado = None
+        self.conectado = False
 
     def adcNode(self, node):
         if(self.node_associado == None):
             self.node_associado = node
-        raise Exception("O usuario já está conectado a um ap")
+
+    def removeNode(self, node):
+        self.node_associado = None
+    
+    def estaConectado(self):
+        return self.conectado
+
