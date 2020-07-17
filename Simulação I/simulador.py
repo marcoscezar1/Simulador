@@ -8,5 +8,10 @@ class Simulador:
         self.usuarios = usuarios
 
     def realizaSimulacao(self):
+        while self.momento_autal!=self.duracao_simulacao:
+            self.momento_autal+=1
+            if(self.momento_autal%self.tempo_de_atualizacao==0):
+
+                break
         pass
 

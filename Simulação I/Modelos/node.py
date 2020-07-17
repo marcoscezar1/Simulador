@@ -9,18 +9,18 @@ class Node:
         self.situacao_inadequada = False
    
     def adcUsuario(self, usuario):
-        if(not self.status){
+        if(not self.status):
             raise Exception("AP desligado")
-        }
+
         if(self.qtd_de_usuarios >= self.limite_de_usuarios):
            pass
         self.usuarios.append(usuario)
         self.qtd_de_usuarios += 1
 
     def removeUsuario(self, usuario):
-        if(not self.status){
+        if(not self.status):
             raise Exception("AP desligado")
-        }
+
         if(usuario == []):
             raise Exception("Não há usuarios no AP")
         self.usuarios.append(usuario)
