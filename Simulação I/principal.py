@@ -9,40 +9,48 @@ model = KMeans()
 visualizer = KElbowVisualizer(model, k=(1,10))
 visualizer.fit(self.dataset)
 visualizer.show()
-x = True
+self.dataset = True
 
 a = {1: 'a'}
 print(a[1])'''
 
 
 from simulador import Simulador
-from Modelos import graph
-from Modelos import node
-from Modelos import usuario
+import graph
+import node
+import usuario
+import clusterizador as cls
 import csv
 
 
 
 def lerArq(n):
-    global leitorArq
     leitorArq=[]
     with open(n) as csvFile:
         csvReader = csv.reader(csvFile, delimiter=",")
 
         for linha in csvReader:
             leitorArq.append(linha)
+    return leitorArq
 
 
 
-def criandoNode():
-    for j in range(1, len(matrizAdj[0])):
-        listaN.append(node.Node(matrizAdj[0][j]))
+def criandoNode(mat):
+    listaN=[]
+    for j in range(1, len(mat[0])):
+        listaN.append(node.Node(mat[0][j]))
         grafo.createNode(listaN[j-1])
-    for i in range(1, len(matrizAdj)):
-        for j in range(1, len(matrizAdj[i])):
-            if matrizAdj[i][j]=='1':
-                if matrizAdj[0][j]==listaN[j-1].id:
+    for i in range(1, len(mat)):
+        for j in range(1, len(mat[i])):
+            if mat[i][j]=='1':
+                if mat[0][j]==listaN[j-1].id:
                     listaN[j-1].vizinhos.append(listaN[i-1])
+
+
+def createElbow(dir):
+    cluster = cls.Clusterizador(dir)
+    cluster.abrirDataSet()
+    cluster.gerarGrafico()
 
 
 
@@ -55,17 +63,18 @@ def criandoNode():
 
 
 grafo= graph.Graph()
-lerArq("matriz-adj.csv")
-matrizAdj=leitorArq
-listaN=[]
-criandoNode()
+matrizAdj= lerArq("matriz-adj.csv")
+
+criandoNode(matrizAdj)
 grafo.createArcs()
 
-
+cluster = cls.Clusterizador("matriz-adj.csv")
+cluster.abrirDataSet()
+cluster.gerarClusters()
 '''lerArq("C://Users//mbela//Downloads//dataset-filtrado.csv")
 matizInfoDS=leitorArq
-alocaInfoDataset()'''
+alocaInfoDataset()
 
 
 simula=Simulador(0,grafo, 3)
-simula.realizaSimulacao()
+simula.realizaSimulacao()'''

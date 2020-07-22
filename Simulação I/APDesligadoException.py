@@ -1,2 +1,2 @@
-class APDesligadoException(Exception):
+class APDesligadoEself.datasetception(Eself.datasetception):
     pass

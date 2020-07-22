@@ -1,2 +1,2 @@
-class APVazioException(Exception):
+class APVazioEself.datasetception(Eself.datasetception):
     pass
