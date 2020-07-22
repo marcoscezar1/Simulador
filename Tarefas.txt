@@ -3,11 +3,11 @@ Acho que tirando a parte de otimização, falta pouco pra terminar
 
 Seguinte
 
-Refatorar o código pra tirar deixar só em pt e snake_case para os métodos
-Deixar os nomes mais uniformes para evitar erros
+Refatorar o código pra tirar deiself.datasetar só em pt e snake_case para os métodos
+Deiself.datasetar os nomes mais uniformes para evitar erros
 as classes continuam PascalCase
 
--Falta terminar o grafo. Entendi como o networkx funciona e vai ser rápido
+-Falta terminar o grafo. Entendi como o networkself.dataset funciona e vai ser rápido
     Tenho que melhorar seus métodos e adc alguns que faltam (mas isso vou vendo enquanto o projeto vai rolando)
 
 -Colocar o código de simulação
