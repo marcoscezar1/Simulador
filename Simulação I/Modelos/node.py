@@ -9,13 +9,16 @@ class Node:
         self.situacao_inadequada = False
    
     def adcUsuario(self, usuario):
+        self.situacao_inadequada=False
         if(not self.status):
             raise Exception("AP desligado")
 
         if(self.qtd_de_usuarios >= self.limite_de_usuarios):
-           pass
+            print("AP lotado")
+            self.situacao_inadequada=True
         self.usuarios.append(usuario)
         self.qtd_de_usuarios += 1
+
 
     def removeUsuario(self, usuario):
         if(not self.status):
@@ -33,4 +36,5 @@ class Node:
         self.status = True
 
     def desligarPA(self):
-        self.status = True
+        self.status = False
+        '''antes o valor era True'''

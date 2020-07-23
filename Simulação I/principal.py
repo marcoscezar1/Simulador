@@ -20,6 +20,7 @@ from Modelos import graph
 from Modelos import node
 from Modelos import usuario
 import csv
+import pandas as pd
 
 
 
@@ -28,7 +29,6 @@ def lerArq(n):
     leitorArq=[]
     with open(n) as csvFile:
         csvReader = csv.reader(csvFile, delimiter=",")
-
         for linha in csvReader:
             leitorArq.append(linha)
 
@@ -42,7 +42,7 @@ def criandoNode():
         for j in range(1, len(matrizAdj[i])):
             if matrizAdj[i][j]=='1':
                 if matrizAdj[0][j]==listaN[j-1].id:
-                    listaN[j-1].vizinhos.append(listaN[i-1])
+                    listaN[j-1].adcVizinho(listaN[i-1])
 
 
 
@@ -62,10 +62,20 @@ criandoNode()
 grafo.createArcs()
 
 
+
 '''lerArq("C://Users//mbela//Downloads//dataset-filtrado.csv")
 matizInfoDS=leitorArq
 alocaInfoDataset()'''
 
 
-simula=Simulador(0,grafo, 3)
-simula.realizaSimulacao()
+simula=Simulador(0,grafo)
+f=open("dataset-filtrado.csv", newline='')
+dataset=csv.reader(f)
+
+
+
+simula.realizaSimulacao(dataset)
+
+
+
+'''300000'''
