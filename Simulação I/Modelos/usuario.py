@@ -25,5 +25,6 @@ class Usuario:
 
 
     def mudarTemposInOut(self, tempoChegada, tempoSaida):
-        self.tempo_de_chegada=tempoChegada
-        self.tempo_de_saida=tempoSaida
+        if tempoSaida>=self.tempo_de_saida:
+            self.tempo_de_chegada=tempoChegada
+            self.tempo_de_saida=tempoSaida

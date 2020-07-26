@@ -69,7 +69,7 @@ alocaInfoDataset()'''
 
 
 simula=Simulador(0,grafo)
-f=open("dataset-filtrado.csv", newline='')
+f=open("dataset-filtrado(1).csv", newline='')
 dataset=csv.reader(f)
 
 

@@ -33,53 +33,67 @@ class Simulador:
 
 
     def realizaSimulacao(self, dataset):
-
+        ultimaLinha = None
         campos=next(dataset)
         while self.momento_autal!=self.duracao_simulacao:
             jaExiste=False
-            linha=next(dataset)
-            id=linha[7]
-            tempoChegada=float(linha[5])-self.tempoInicial
-            tempoSaida=(float(linha[5])-self.tempoInicial)+1
-            ap=linha[8]
 
 
-            for i in self.usuarios:
-                if id == i.id:
-                    i.mudarTemposInOut(tempoChegada, tempoSaida)
-                    jaExiste=True
+            linha = []
+            if self.momento_autal != 0:
+                linha.append(ultimaLinha)
+            while True:
+                linha.append(next(dataset))
+                if float(linha[len(linha) - 1][3])- self.tempoInicial >= self.momento_autal + 1000:
+                    ultimaLinha = linha[len(linha) - 1]
+
+                    break
+                '''criar um if para caso o arquivo terminar'''
+
+            for conex in range(len(linha)-2):
+
+                id=linha[conex][5]
+                tempoChegada=float(linha[conex][3])-self.tempoInicial
+                tempoSaida=(float(linha[conex][3])-self.tempoInicial)+float(linha[conex][4])+self.tempo_de_atualizacao
+                ap=linha[conex][6]
 
 
-                    if i.estaConectado() == False:
-
-                        for j in self.grafo.nodes:
-                            if j.id == ap:
-
-                                if j.status == False:
-                                    j.ligarPA()
-
-                                j.adcUsuario(i)
-                                if j.situacao_inadequada==False:
-                                    i.adcNode(j)
-                                    i.conecta()
+                for i in self.usuarios:
+                    if id == i.id:
+                        i.mudarTemposInOut(tempoChegada, tempoSaida)
+                        jaExiste=True
 
 
+                        if i.estaConectado() == False:
 
-            if jaExiste==False:
-                user=usuario.Usuario(id, tempoChegada, tempoSaida)
-                Simulador.adicionaUser(self, user)
+                            for j in self.grafo.nodes:
+                                if j.id == ap:
 
-                for i in self.grafo.nodes:
-                    if i.id==ap:
+                                    if j.status == False:
+                                        j.ligarPA()
 
-                        if i.status==False:
-                            i.ligarPA()
+                                    j.adcUsuario(i)
+                                    if j.situacao_inadequada==False:
+                                        i.adcNode(j)
+                                        i.conecta()
 
-                        i.adcUsuario(user)
 
-                        if i.situacao_inadequada==False:
-                            user.adcNode(i)
-                            user.conecta()
+
+                if jaExiste==False:
+                    user=usuario.Usuario(id, tempoChegada, tempoSaida)
+                    Simulador.adicionaUser(self, user)
+
+                    for i in self.grafo.nodes:
+                        if i.id==ap:
+
+                            if i.status==False:
+                                i.ligarPA()
+
+                            i.adcUsuario(user)
+
+                            if i.situacao_inadequada==False:
+                                user.adcNode(i)
+                                user.conecta()
 
 
             Simulador.verificaConexao(self)
@@ -87,10 +101,20 @@ class Simulador:
             if(self.momento_autal%self.tempo_de_atualizacao==0):
 
                 pass
+
+            a=input()
+            for i in self.usuarios:
+                print(i.id ," - ",i.tempo_de_chegada," - ",i.tempo_de_saida," - ",i.node_associado," - ",i.conectado)
+                print("-------------------------")
+
+
+
+
             '''print(self.usuarios[0].estaConectado(), self.usuarios[0].id, self.usuarios[0].tempo_de_saida, self.momento_autal, self.usuarios[0].node_associado)'''
             '''print(self.usuarios[len(self.usuarios)-1].id,self.usuarios[len(self.usuarios)-1].tempo_de_chegada, self.usuarios[len(self.usuarios)-1].tempo_de_saida)'''
             
-            self.momento_autal += 1
+            self.momento_autal += 60000
+            '''60000'''
 
 
 
