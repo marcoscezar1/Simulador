@@ -68,13 +68,14 @@ matrizAdj= lerArq("matriz-adj.csv")
 criandoNode(matrizAdj)
 grafo.createArcs()
 
+
 cluster = cls.Clusterizador("matriz-adj.csv")
 cluster.abrirDataSet()
 cluster.gerarClusters()
-'''lerArq("C://Users//mbela//Downloads//dataset-filtrado.csv")
-matizInfoDS=leitorArq
-alocaInfoDataset()
 
 
-simula=Simulador(0,grafo, 3)
-simula.realizaSimulacao()'''
+simula=simulador.Simulador(0,grafo)
+f=open("dataset-filtrado(1).csv", newline='')
+dataset=csv.reader(f)
+simula.realizaSimulacao(dataset)
+
