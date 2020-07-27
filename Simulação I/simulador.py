@@ -98,9 +98,10 @@ class Simulador:
 
             Simulador.verificaConexao(self)
 
-            if(self.momento_autal%self.tempo_de_atualizacao==0):
-
-                pass
+            '''if(self.momento_autal%self.tempo_de_atualizacao==0)and(self.momento_autal!=0):
+                for i in self.grafo.nodes:
+                    print()
+                pass'''
 
             a=input()
             for i in self.usuarios:
