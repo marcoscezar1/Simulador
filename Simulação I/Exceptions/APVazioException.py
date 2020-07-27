@@ -1,2 +1,0 @@
-class APVazioException(Exception):
-    pass

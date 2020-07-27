@@ -15,10 +15,10 @@ a = {1: 'a'}
 print(a[1])'''
 
 
-from simulador import Simulador
-from Modelos import graph
-from Modelos import node
-from Modelos import usuario
+import simulador
+import graph
+import node
+import usuario
 import csv
 import pandas as pd
 
@@ -68,7 +68,7 @@ matizInfoDS=leitorArq
 alocaInfoDataset()'''
 
 
-simula=Simulador(0,grafo)
+simula=simulador.Simulador(0,grafo)
 f=open("dataset-filtrado(1).csv", newline='')
 dataset=csv.reader(f)
 

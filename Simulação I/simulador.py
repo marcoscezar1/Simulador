@@ -1,4 +1,4 @@
-from Modelos import usuario
+import usuario
 class Simulador:
     def __init__(self, eventos, grafo):
         self.duracao_simulacao = 86400000
@@ -114,7 +114,7 @@ class Simulador:
             '''print(self.usuarios[0].estaConectado(), self.usuarios[0].id, self.usuarios[0].tempo_de_saida, self.momento_autal, self.usuarios[0].node_associado)'''
             '''print(self.usuarios[len(self.usuarios)-1].id,self.usuarios[len(self.usuarios)-1].tempo_de_chegada, self.usuarios[len(self.usuarios)-1].tempo_de_saida)'''
             
-            self.momento_autal += 60000
+            self.momento_autal += 1000
             '''60000'''
 
 
