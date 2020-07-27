@@ -16,3 +16,15 @@ class Usuario:
     def estaConectado(self):
         return self.conectado
 
+    def desconecta(self):
+        self.conectado=False
+
+    def conecta(self):
+        self.conectado=True
+
+
+
+    def mudarTemposInOut(self, tempoChegada, tempoSaida):
+        if tempoSaida>=self.tempo_de_saida:
+            self.tempo_de_chegada=tempoChegada
+            self.tempo_de_saida=tempoSaida
