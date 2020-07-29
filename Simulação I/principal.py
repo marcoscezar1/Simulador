@@ -67,6 +67,7 @@ matrizAdj= lerArq("matriz-adj.csv")
 
 criandoNode(matrizAdj)
 grafo.createArcs()
+APsIniciais.inicializaVizinhos(grafo)
 
 
 cluster = cls.Clusterizador("matriz-adj.csv")
