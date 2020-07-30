@@ -16,10 +16,35 @@ class Simulador:
 
     '''def tirarConexao(self, user, node):'''
 
+    def transferirUsuarios(self, apSai, apEntra):
+        for i in apSai.usuarios:
+            apSai.removeUsuario(i)
+            i.removeNode(apSai)
+
+            apEntra.adcUsuario(i)
+            i.adcNode(apEntra)
+        apSai.desligarPA()
+
+
+
+    def reorganizaUsuarios(self):
+        for i in self.grafo.nodes:
+            if i.status==True and i.qtd_de_usuarios>0:
+                for j in i.vizinhos:
+                    if j.status==True and i.status==True:
+                        if i.qtd_de_usuarios<=j.qtd_de_usuarios:
+                            if i.qtd_de_usuarios+j.qtd_de_usuarios<=15:
+                                '''passar usuarios de i para j'''
+                                self.transferirUsuarios(i, j)
+
+
+
+
 
     def verificaConexao(self):
         for i in self.usuarios:
             if self.momento_autal>=i.tempo_de_saida:
+                estavaLotado=False
                 for j in self.grafo.nodes:
 
                     if(i.node_associado!=None) and (j.id==i.node_associado.id):
@@ -202,6 +227,7 @@ class Simulador:
 
 
             Simulador.verificaConexao(self)
+            self.reorganizaUsuarios()
 
             '''if(self.momento_autal%self.tempo_de_atualizacao==0)and(self.momento_autal!=0):
                 for i in self.grafo.nodes:
@@ -231,3 +257,7 @@ class Simulador:
             
             self.momento_autal += 60000
             '''60000'''
+
+
+
+
