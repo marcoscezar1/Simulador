@@ -41,6 +41,7 @@ matrizAdj= lerArq("matriz-adj.csv")
 
 criandoNode(matrizAdj)
 grafo.createArcs()
+APsIniciais.inicializaVizinhos(grafo)
 
 simula=simulador.Simulador(0,grafo)
 f=open("dataset-filtrado(1).csv", newline='')
