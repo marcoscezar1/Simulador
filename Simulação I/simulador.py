@@ -1,4 +1,5 @@
 import usuario
+import logger
 class Simulador:
     def __init__(self, eventos, grafo):
         self.duracao_simulacao = 8640000000
@@ -16,14 +17,28 @@ class Simulador:
 
     '''def tirarConexao(self, user, node):'''
 
+
+
+
+    def apsCompativeis(self, apSai, apEntra, user):
+        if user.ap_preferencial == apEntra.id:
+            return True
+        for i in apEntra.vizinhos:
+            if i.id == user.ap_preferencial:
+                return True
+        return False
+
     def transferirUsuarios(self, apSai, apEntra):
         for i in apSai.usuarios:
-            apSai.removeUsuario(i)
-            i.removeNode(apSai)
+            if self.apsCompativeis(apSai, apEntra, i) and apSai.id!=i.ap_preferencial:
+                apSai.removeUsuario(i)
+                i.removeNode(apSai)
 
-            apEntra.adcUsuario(i)
-            i.adcNode(apEntra)
-        apSai.desligarPA()
+                apEntra.adcUsuario(i)
+                i.adcNode(apEntra)
+        if apSai.qtd_de_usuarios == 0:
+            apSai.desligarPA()
+
 
 
 
@@ -46,15 +61,17 @@ class Simulador:
             if self.momento_autal>=i.tempo_de_saida:
                 estavaLotado=False
                 for j in self.grafo.nodes:
-
+                    vizinhoLig=False
                     if(i.node_associado!=None) and (j.id==i.node_associado.id):
 
                         j.removeUsuario(i)
                         i.removeNode(j)
                         i.desconecta()
 
-
-                        if j.qtd_de_usuarios==0 :
+                        for a in j.vizinhos:
+                            if a.status==True:
+                                vizinhoLig=True
+                        if j.qtd_de_usuarios==0 and vizinhoLig==True:
                             j.desligarPA()
 
 
@@ -111,11 +128,19 @@ class Simulador:
 
             '''Se não tiver AP vizinho ligado ou válido'''
             if maior[0] == None:
-                ap.ligarPA()
-                ap.adcUsuario(usuario)
-                usuario.adcNode(ap)
-                usuario.conecta()
-                self.realocaAPLigar(ap)
+                vizinhoLigado=False
+                for i in ap.vizinhos:
+                    if i.status==True:
+                        vizinhoLigado=True
+                if vizinhoLigado==True:
+                    ap.ligarPA()
+                    ap.adcUsuario(usuario)
+                    usuario.adcNode(ap)
+                    usuario.conecta()
+                    self.realocaAPLigar(ap)
+                else:
+                    print("Usuario nao servido!!!!")
+                    self.grafo.increment_nao_servido()
 
 
 
@@ -156,13 +181,20 @@ class Simulador:
                         self.realocaAPLigar(maior2[0])
                     '''Se não existir AP vizinho desligado'''
                     if maior2[0] == None:
+                        ap.adcUsuarioSinalRuim(usuario)
+                        usuario.adcNode(ap)
+                        usuario.conecta()
                         print("Usuario nao conseguiu se conectar!!!!")
 
 
 
-    def realizaSimulacao(self, dataset):
+
+    def realizaSimulacao(self, dataset, numLinhas):
         ultimaLinha = None
         campos=next(dataset)
+        infos=logger.Logger("infos_simulacao.txt")
+        infos.open_file()
+        fimArq=False
         while self.momento_autal!=self.duracao_simulacao:
             '''jaExiste = False'''
             '''linha=next(dataset)'''
@@ -177,16 +209,24 @@ class Simulador:
                     ultimaLinha = linha[len(linha) - 1]
 
                     break
+                if dataset.line_num>=numLinhas:
+                    fimArq=True
+                    break
+
             '''criar um if para caso o arquivo terminar'''
+            '''for i in self.grafo.nodes:
+                i.ligarPA()
+                i.qtd_de_usuarios=15'''
 
             for conex in range(len(linha)-2):
                 jaExiste = False
 
                 id=linha[conex][5]
                 tempoChegada=(float(linha[conex][3])*1000)-self.tempoInicial
-                tempoSaida=((float(linha[conex][3])*1000)-self.tempoInicial)+(float(linha[conex][4])*1000)+(float(self.tempo_de_atualizacao)*1000)
+                tempoSaida=((float(linha[conex][3])*1000)-self.tempoInicial)+(float(linha[conex][4])*1000)+(float(self.tempo_de_atualizacao))
                 ap=linha[conex][6]
 
+                print("-------------C O M A N D O S-------------")
 
                 for i in self.usuarios:
                     if id == i.id:
@@ -206,7 +246,15 @@ class Simulador:
                                     if j.situacao_inadequada==False:
                                         i.adcNode(j)
                                         i.conecta()'''
-
+                        print(i.id, i.tempo_de_chegada, i.tempo_de_saida, i.conectado, i.ap_preferencial)
+                        if i.node_associado!=None:
+                            print("--->",i.node_associado.id,"<---")
+                        print("----V I Z I N H O S-----")
+                        for z in self.grafo.nodes:
+                            if z.id == i.ap_preferencial:
+                                for j in z.vizinhos:
+                                    print("---", j.id, j.status, len(j.vizinhos), "---")
+                                print("-------------------------")
 
 
                 if jaExiste==False:
@@ -225,38 +273,81 @@ class Simulador:
                                 user.adcNode(i)
                                 user.conecta()'''
 
+                    print(user.id, user.tempo_de_chegada, user.tempo_de_saida, user.conectado, user.ap_preferencial)
+                    if user.node_associado != None:
+                        print("--->", user.node_associado.id, "<---")
+                    print("----V I Z I N H O S-----")
+                    for z in self.grafo.nodes:
+                        if z.id==user.ap_preferencial:
+                            for j in z.vizinhos:
+                                print("---",j.id , j.status, len(j.vizinhos),"---")
+                            print("-------------------------")
 
-            Simulador.verificaConexao(self)
+
+
+
+            self.verificaConexao()
             self.reorganizaUsuarios()
 
-            '''if(self.momento_autal%self.tempo_de_atualizacao==0)and(self.momento_autal!=0):
-                for i in self.grafo.nodes:
-                    print()
-                pass'''
+            if((self.momento_autal%self.tempo_de_atualizacao==0)and(self.momento_autal!=0))or fimArq==True:
+                infos.write_in_file(self.grafo)
 
             a=input()
-            for i in self.usuarios:
-                print(i.id ," - ",i.tempo_de_chegada," - ",i.tempo_de_saida," - ",i.node_associado.id," - ",i.conectado, " - ", i.ap_preferencial)
-                for j in i.node_associado.vizinhos:
-                    print("---",j.id ,"---")
-                print("-------------------------")
+            print("--------------U S U A R I O S--------------")
 
+            '''for i in self.grafo.nodes:
+                if i.id == 'ap0666' and self.momento_autal==0:
+                    naruto=usuario.Usuario("naruto", 10000, 60001, "ap0666")
+                    self.adicionaUser(naruto)
+                    i.adcUsuario(naruto)
+                    naruto.adcNode(i)
+                    naruto.conecta()'''
+
+
+            '''for i in self.grafo.nodes:
+                if i.id == 'ap0465':
+                    i.ligarPA()
+                    self.realocaAPLigar(i)'''
+            for i in self.usuarios:
+                print(i.id)
+                print(i.id ," - ",i.tempo_de_chegada," - ",i.tempo_de_saida," - ",i.conectado, " - ", i.ap_preferencial)
+                '''for j in i.node_associado.vizinhos:
+                    print("---",j.id ,"---")
+                print("-------------------------")'''
+
+
+            print()
+            print()
+            print("-------------P O N T O   D E   A C E S S O---------------")
             for i in self.grafo.nodes:
                 if i.status==True:
-                    print(i.id, i.qtd_de_usuarios, i.status)
+                    listaID=i.listaIdUsuarios()
+                    print(i.id, i.qtd_de_usuarios, i.status, listaID)
                 '''for j in i.vizinhos:
                     if i.status==True:
                         print("--", j.id,"--", j.status, end="")
                 print()'''
 
+            '''for i in self.grafo.nodes:
+                if i.id == 'ap0058':
+                    if i.status==False:
+                        i.ligarPA()
+                    i.qtd_de_usuarios+=2
+                if i.id == 'ap0313':
+                    if i.status==False:
+                        i.ligarPA()
+                    i.qtd_de_usuarios+=1'''
 
 
 
             '''print(self.usuarios[0].estaConectado(), self.usuarios[0].id, self.usuarios[0].tempo_de_saida, self.momento_autal, self.usuarios[0].node_associado)'''
             '''print(self.usuarios[len(self.usuarios)-1].id,self.usuarios[len(self.usuarios)-1].tempo_de_chegada, self.usuarios[len(self.usuarios)-1].tempo_de_saida)'''
-            
+
             self.momento_autal += 60000
             '''60000'''
+
+
+
 
 
 
