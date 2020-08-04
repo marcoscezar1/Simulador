@@ -22,6 +22,14 @@ import usuario
 import clusterizador as cls
 import csv
 
+def ArqNumLinha(n):
+    qtdLinhas=0
+    with open(n) as csvFile:
+        csvReader = csv.reader(csvFile, delimiter=',')
+        for linha in csvReader:
+            qtdLinhas+=1
+    return qtdLinhas
+
 
 
 def lerArq(n):
@@ -75,8 +83,11 @@ cluster.abrirDataSet()
 cluster.gerarClusters()
 
 
+
 simula=simulador.Simulador(0,grafo)
+numLinhas=ArqNumLinha("dataset-filtrado(1).csv")
 f=open("dataset-filtrado(1).csv", newline='')
 dataset=csv.reader(f)
-simula.realizaSimulacao(dataset)
+simula.realizaSimulacao(dataset, numLinhas)
+f.close()
 
