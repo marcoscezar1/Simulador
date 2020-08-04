@@ -21,6 +21,9 @@ class Node:
             self.usuarios.append(usuario)
             self.qtd_de_usuarios += 1
 
+    def adcUsuarioSinalRuim(self, usuario):
+        self.usuarios.append(usuario)
+        self.qtd_de_usuarios += 1
 
     def removeUsuario(self, usuario):
         if(not self.status):
@@ -40,4 +43,12 @@ class Node:
     def desligarPA(self):
         self.status = False
         '''antes o valor era True'''
+
+
+    def listaIdUsuarios(self):
+        listaID=[]
+        for i in self.usuarios:
+            listaID.append(i.id)
+        return listaID
+
 
