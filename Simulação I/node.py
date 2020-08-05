@@ -51,4 +51,3 @@ class Node:
             listaID.append(i.id)
         return listaID
 
-
