@@ -14,11 +14,15 @@ class Node:
             raise Exception("AP desligado")
 
         if(self.qtd_de_usuarios >= self.limite_de_usuarios):
-            print("AP lotado")
+            print("AP lotado ", self.id)
             self.situacao_inadequada=True
+        if self.situacao_inadequada==False:
+            self.usuarios.append(usuario)
+            self.qtd_de_usuarios += 1
+
+    def adcUsuarioSinalRuim(self, usuario):
         self.usuarios.append(usuario)
         self.qtd_de_usuarios += 1
-
 
     def removeUsuario(self, usuario):
         if(not self.status):
@@ -26,7 +30,7 @@ class Node:
 
         if(usuario == []):
             raise Exception("Não há usuarios no AP")
-        self.usuarios.append(usuario)
+        self.usuarios.remove(usuario)
         self.qtd_de_usuarios -= 1
 
     def adcVizinho(self, node):
@@ -38,3 +42,10 @@ class Node:
     def desligarPA(self):
         self.status = False
         '''antes o valor era True'''
+
+
+    def listaIdUsuarios(self):
+        listaID=[]
+        for i in self.usuarios:
+            listaID.append(i.id)
+        return listaID

@@ -1,4 +1,3 @@
-
 '''from sklearn.cluster import KMeans
 import pandas as pd
 import numpy as np
@@ -9,8 +8,7 @@ model = KMeans()
 visualizer = KElbowVisualizer(model, k=(1,10))
 visualizer.fit(self.dataset)
 visualizer.show()
-x = True
-
+self.dataset = True
 a = {1: 'a'}
 print(a[1])'''
 
@@ -19,63 +17,76 @@ import simulador
 import graph
 import node
 import usuario
+import clusterizador as cls
 import csv
-import pandas as pd
+import APsIniciais
 
 
+
+def ArqNumLinha(n):
+    qtdLinhas=0
+    with open(n) as csvFile:
+        csvReader = csv.reader(csvFile, delimiter=',')
+        for linha in csvReader:
+            qtdLinhas+=1
+    return qtdLinhas
 
 def lerArq(n):
-    global leitorArq
     leitorArq=[]
     with open(n) as csvFile:
         csvReader = csv.reader(csvFile, delimiter=",")
+
         for linha in csvReader:
             leitorArq.append(linha)
+    return leitorArq
 
 
 
-def criandoNode():
-    for j in range(1, len(matrizAdj[0])):
-        listaN.append(node.Node(matrizAdj[0][j]))
+def criandoNode(mat):
+    listaN=[]
+    for j in range(1, len(mat[0])):
+        listaN.append(node.Node(mat[0][j]))
         grafo.createNode(listaN[j-1])
-    for i in range(1, len(matrizAdj)):
-        for j in range(1, len(matrizAdj[i])):
-            if matrizAdj[i][j]=='1':
-                if matrizAdj[0][j]==listaN[j-1].id:
-                    listaN[j-1].adcVizinho(listaN[i-1])
+    for i in range(1, len(mat)):
+        for j in range(1, len(mat[i])):
+            if mat[i][j]=='1':
+                if mat[0][j]==listaN[j-1].id:
+                    listaN[j-1].vizinhos.append(listaN[i-1])
+
+
+def createElbow(dir):
+    cluster = cls.Clusterizador(dir)
+    cluster.abrirDataSet()
+    cluster.gerarGrafico()
 
 
 
-'''def alocaInfoDataset():
-    campos=[]
-    for j in range(1, len(leitorArq[0])):
-        for i in range(len(leitorArq)):
-            print(leitorArq[j][i])'''
+
 
 
 
 grafo= graph.Graph()
-lerArq("matriz-adj.csv")
-matrizAdj=leitorArq
-listaN=[]
-criandoNode()
+matrizAdj= lerArq("matriz-adj.csv")
+
+criandoNode(matrizAdj)
 grafo.createArcs()
+APsIniciais.inicializaVizinhos(grafo)
 
 
-
-'''lerArq("C://Users//mbela//Downloads//dataset-filtrado.csv")
-matizInfoDS=leitorArq
-alocaInfoDataset()'''
+'''cluster = cls.Clusterizador("matriz-adj.csv")
+cluster.abrirDataSet()
+cluster.gerarClusters()'''
 
 
 simula=simulador.Simulador(0,grafo)
+numLinhas=ArqNumLinha("dataset-filtrado(1).csv")
 f=open("dataset-filtrado(1).csv", newline='')
 dataset=csv.reader(f)
+simula.realizaSimulacao(dataset, numLinhas)
+f.close()
 
-
-
-simula.realizaSimulacao(dataset)
 
 
 
 '''300000'''
+
