@@ -292,7 +292,7 @@ class Simulador:
             if((self.momento_autal%self.tempo_de_atualizacao==0)and(self.momento_autal!=0))or fimArq==True:
                 infos.write_in_file(self.grafo)
 
-            a=input()
+            
             print("--------------U S U A R I O S--------------")
 
             '''for i in self.grafo.nodes:
@@ -309,7 +309,7 @@ class Simulador:
                     i.ligarPA()
                     self.realocaAPLigar(i)'''
             for i in self.usuarios:
-                print(i.id)
+                
                 print(i.id ," - ",i.tempo_de_chegada," - ",i.tempo_de_saida," - ",i.conectado, " - ", i.ap_preferencial)
                 '''for j in i.node_associado.vizinhos:
                     print("---",j.id ,"---")
@@ -345,6 +345,7 @@ class Simulador:
 
             self.momento_autal += 60000
             '''60000'''
+            a=input()
 
 
 
