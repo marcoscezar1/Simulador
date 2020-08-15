@@ -23,16 +23,7 @@ def ArqNumLinha(n):
             qtdLinhas+=1
     return qtdLinhas
 
-def criandoNode(mat):
-    listaN=[]
-    for j in range(1, len(mat[0])):
-        listaN.append(node.Node(mat[0][j]))
-        grafo.createNode(listaN[j-1])
-    for i in range(1, len(mat)):
-        for j in range(1, len(mat[i])):
-            if mat[i][j]=='1':
-                if mat[0][j]==listaN[j-1].id:
-                    listaN[j-1].vizinhos.append(listaN[i-1])
+
 
 
 cluster = cls.Clusterizador("matriz-adj.csv")
@@ -43,8 +34,8 @@ cluster.gerarDendograma()
 grafo= graph.Graph()
 matrizAdj= lerArq("matriz-adj.csv")
 
-criandoNode(matrizAdj)
-grafo.createArcs()
+grafo.create_nodes(matrizAdj)
+grafo.create_arcs()
 APsIniciais.inicializaVizinhos(grafo)
 
 simula=simulador.Simulador(0,grafo)
