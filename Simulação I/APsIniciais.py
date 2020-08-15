@@ -1,5 +1,6 @@
 
 import networkx as nx
+'''método dos aps com maior quantidade de vizinhos'''
 '''def inicializaVizinhos(grafo):
     apslig=[]
     for ind in range(6):
@@ -25,7 +26,7 @@ import networkx as nx
         print(maior[0].id)'''
 
 
-
+'''método dos aps pelas cliques'''
 def acha_ap_pra_ligar(lista_de_nodes):
     lista_de_nodes_aux = sorted(lista_de_nodes, key=lambda node: len(node.vizinhos))
 
