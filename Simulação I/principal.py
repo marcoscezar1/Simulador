@@ -34,12 +34,6 @@ def criandoNode(mat):
                 if mat[0][j]==listaN[j-1].id:
                     listaN[j-1].vizinhos.append(listaN[i-1])
 
-
-cluster = cls.Clusterizador("matriz-adj.csv")
-cluster.abrirDataSet()
-cluster.gerarDendograma()
-
-'''
 grafo= graph.Graph()
 matrizAdj= lerArq("matriz-adj.csv")
 
@@ -52,4 +46,4 @@ numLinhas=ArqNumLinha("dataset-filtrado(1).csv")
 f=open("dataset-filtrado(1).csv", newline='')
 dataset=csv.reader(f)
 simula.realizaSimulacao(dataset, numLinhas)
-f.close()'''
+f.close()
