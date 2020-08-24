@@ -33,8 +33,8 @@ class Node:
             raise Exception("Não há usuarios no AP")
         self.usuarios.remove(usuario)
         self.qtd_de_usuarios -= 1
-
-    def adcVizinho(self, node):
+        
+    def add_neighbor(self, node):
         self.vizinhos.append(node)
 
     def ligarPA(self):
