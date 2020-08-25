@@ -24,7 +24,12 @@ def ArqNumLinha(n):
     return qtdLinhas
 
 
+cluster = cls.Clusterizador("matriz-adj.csv")
+cluster.abrirDataSet()
+cluster.gerarDBSCAN()
 
+
+"""
 grafo= graph.Graph()
 matrizAdj= lerArq("matriz-adj.csv")
 
@@ -38,3 +43,4 @@ f=open("dataset-filtrado(1).csv", newline='')
 dataset=csv.reader(f)
 simula.realizaSimulacao(dataset, numLinhas)
 f.close()
+"""
