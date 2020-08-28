@@ -11,6 +11,9 @@ class Graph(nx.Graph):
     def increment_nao_servido(self):
         self.nao_servido += 1
 
+    def decrement_nao_serveido(self):
+        self.nao_servido-=1
+
     def create_node(self, id: str) -> Node:
         node = Node(id)
         return node
