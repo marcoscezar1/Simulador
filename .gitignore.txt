@@ -1,3 +1,4 @@
 matriz-adj.csv
 grafo-filtrado.csv
 dataset-filtrado.csv
+dataset-filtrado-ordenado.csv

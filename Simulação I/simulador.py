@@ -8,14 +8,49 @@ class Simulador:
         self.tempo_de_atualizacao = 300000
         self.eventos = eventos
         self.usuarios = []
+        self.usersNaoServidos=[]
         self.tempoInicial = 1523997983560
+        self.bytesRecebido=0
+        self.bytesEnviado=0
 
-
+    def procurarAP(self, ap):
+        for i in self.grafo.nodes:
+            if ap==i.id:
+                return i
 
     def adicionaUser(self, user):
         self.usuarios.append(user)
 
+    def adcNaoServ(self, user):
+        if user not in self.usersNaoServidos:
+            self.usersNaoServidos.append(user)
+
+            user.tempo_de_saida-=self.tempo_de_atualizacao
+
+    def removeNaoServ(self, user):
+        self.usersNaoServidos.remove(user)
+
     '''def tirarConexao(self, user, node):'''
+
+    def verificaNaoServ(self, tempo):
+        for i in self.usersNaoServidos:
+            if tempo>=i.tempo_de_saida:
+                self.removeNaoServ(i)
+            else:
+                ap=self.procurarAP(i.ap_preferencial)
+                self.ligaraoAP(ap, i)
+                if i.conectado==True:
+                    self.removeNaoServ(i)
+                    i.estaServido()
+                    i.tempo_de_saida+=self.tempo_de_atualizacao
+                    self.grafo.decrement_nao_servido()
+
+
+
+    def somaBytes(self, user):
+        if user.naoServido==False:
+            self.bytesRecebido+=user.byteRecebido
+            self.bytesEnviado+=user.byteEnviado
 
 
 
@@ -140,7 +175,11 @@ class Simulador:
                     self.realocaAPLigar(ap)
                 else:
                     print("Usuario nao servido!!!!")
-                    self.grafo.increment_nao_servido()
+                    if usuario.naoServido==False:
+                        usuario.naofoiServido()
+                        self.grafo.increment_nao_servido()
+                    self.adcNaoServ(usuario)
+
 
 
 
@@ -192,7 +231,7 @@ class Simulador:
     def realizaSimulacao(self, dataset, numLinhas):
         ultimaLinha = None
         campos=next(dataset)
-        infos=logger.Logger("infos_simulacao.txt")
+        infos=logger.Logger()
         infos.open_file()
         fimArq=False
         while self.momento_autal!=self.duracao_simulacao:
@@ -205,7 +244,7 @@ class Simulador:
                 linha.append(ultimaLinha)
             while True:
                 linha.append(next(dataset))
-                if (float(linha[len(linha) - 1][3])*1000)- self.tempoInicial >= self.momento_autal + 60000:
+                if (float(linha[len(linha) - 1][5])*1000)- self.tempoInicial >= self.momento_autal + 60000:
                     ultimaLinha = linha[len(linha) - 1]
 
                     break
@@ -217,14 +256,20 @@ class Simulador:
             '''for i in self.grafo.nodes:
                 i.ligarPA()
                 i.qtd_de_usuarios=15'''
+            if fimArq==True:
+                tam=len(linha)
+            else:
+                tam=len(linha)-1
+            for conex in range(tam):
 
-            for conex in range(len(linha)-2):
                 jaExiste = False
 
-                id=linha[conex][5]
-                tempoChegada=(float(linha[conex][3])*1000)-self.tempoInicial
-                tempoSaida=((float(linha[conex][3])*1000)-self.tempoInicial)+(float(linha[conex][4])*1000)+(float(self.tempo_de_atualizacao))
-                ap=linha[conex][6]
+                id=linha[conex][7]
+                tempoChegada=(float(linha[conex][5])*1000)-self.tempoInicial
+                tempoSaida=((float(linha[conex][5])*1000)-self.tempoInicial)+(float(linha[conex][6])*1000)+(float(self.tempo_de_atualizacao))
+                ap=linha[conex][8]
+                byteRecebido=float(linha[conex][11])
+                byteEnviado=float(linha[conex][4])
 
                 print("-------------C O M A N D O S-------------")
 
@@ -232,6 +277,7 @@ class Simulador:
                     if id == i.id:
                         i.mudarTemposInOut(tempoChegada, tempoSaida)
                         jaExiste=True
+                        self.somaBytes(i)
 
 
                         if i.estaConectado() == False:
@@ -246,6 +292,7 @@ class Simulador:
                                     if j.situacao_inadequada==False:
                                         i.adcNode(j)
                                         i.conecta()'''
+                            
                         print(i.id, i.tempo_de_chegada, i.tempo_de_saida, i.conectado, i.ap_preferencial)
                         if i.node_associado!=None:
                             print("--->",i.node_associado.id,"<---")
@@ -255,12 +302,12 @@ class Simulador:
                                 for j in z.vizinhos:
                                     print("---", j.id, j.status, len(j.vizinhos), "---")
                                 print("-------------------------")
+                                
 
 
                 if jaExiste==False:
-                    user=usuario.Usuario(id, tempoChegada, tempoSaida, ap)
+                    user=usuario.Usuario(id, tempoChegada, tempoSaida, ap, byteRecebido, byteEnviado)
                     Simulador.adicionaUser(self, user)
-
                     for i in self.grafo.nodes:
                         if i.id==ap:
                             self.ligaraoAP(i, user)
@@ -272,6 +319,7 @@ class Simulador:
                             if i.situacao_inadequada==False:
                                 user.adcNode(i)
                                 user.conecta()'''
+                    self.somaBytes(user)
 
                     print(user.id, user.tempo_de_chegada, user.tempo_de_saida, user.conectado, user.ap_preferencial)
                     if user.node_associado != None:
@@ -283,16 +331,16 @@ class Simulador:
                                 print("---",j.id , j.status, len(j.vizinhos),"---")
                             print("-------------------------")
 
-
+                self.verificaNaoServ(tempoChegada)
 
 
             self.verificaConexao()
             self.reorganizaUsuarios()
 
             if((self.momento_autal%self.tempo_de_atualizacao==0)and(self.momento_autal!=0))or fimArq==True:
-                infos.write_in_file(self.grafo)
+                infos.write_in_file(self.grafo, self.bytesEnviado, self.bytesRecebido)
 
-            a=input()
+            '''a=input()'''
             print("--------------U S U A R I O S--------------")
 
             '''for i in self.grafo.nodes:

@@ -42,7 +42,7 @@ def lerArq(n):
 
 
 
-def criandoNode(mat):
+'''def criandoNode(mat):
     listaN=[]
     for j in range(1, len(mat[0])):
         listaN.append(node.Node(mat[0][j]))
@@ -51,7 +51,7 @@ def criandoNode(mat):
         for j in range(1, len(mat[i])):
             if mat[i][j]=='1':
                 if mat[0][j]==listaN[j-1].id:
-                    listaN[j-1].vizinhos.append(listaN[i-1])
+                    listaN[j-1].vizinhos.append(listaN[i-1])'''
 
 
 def createElbow(dir):
@@ -66,11 +66,11 @@ def createElbow(dir):
 
 
 grafo= graph.Graph()
-matrizAdj= lerArq("matriz-adj.csv")
+matrizAdj= lerArq("../matriz-adj.csv")
 
-criandoNode(matrizAdj)
-grafo.createArcs()
-APsIniciais.inicializaVizinhos(grafo)
+grafo.create_nodes(matrizAdj)
+grafo.create_arcs()
+APsIniciais.inicializaGrafo(grafo)
 
 
 '''cluster = cls.Clusterizador("matriz-adj.csv")
@@ -79,9 +79,10 @@ cluster.gerarClusters()'''
 
 
 simula=simulador.Simulador(0,grafo)
-numLinhas=ArqNumLinha("dataset-filtrado(1).csv")
-f=open("dataset-filtrado(1).csv", newline='')
+numLinhas = ArqNumLinha("../dataset-filtrado-ordenado.csv")
+f=open("../dataset-filtrado-ordenado.csv", newline='')
 dataset=csv.reader(f)
+print(numLinhas)
 simula.realizaSimulacao(dataset, numLinhas)
 f.close()
 
